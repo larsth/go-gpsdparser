@@ -13,6 +13,4 @@ var (
 	ErrClassZeroLength = errors.New("Class of type string is a zero length")
 	//ErrUnknownClass is an error withe text "Unknown gpsd JSON document class type"
 	ErrUnknownClass = errors.New("Unknown gpsd JSON document class type")
-	//ErrNilLogger is an error withe text "The Logger is a nil pointer"
-	ErrNilLogger = errors.New("The Logger is a nil pointer")
 )

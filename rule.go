@@ -1,18 +1,27 @@
 package gpsdparser
 
-import "github.com/larsth/go-gpsdfilter"
+import (
+	"fmt"
 
-func ruleLogIgnoreUnknown(p *ParseArgs, rule *gpsdfilter.Rule) {
+	"github.com/juju/errors"
+	"github.com/larsth/go-gpsdfilter"
+)
+
+func ruleLogIgnoreUnknown(p *ParseArgs, rule *gpsdfilter.Rule) string {
 	if rule.DoLog {
-		p.Logger.Printf("gpsd JSON document of type:\"%s\": %v", rule.Class, p.Data)
+		s := fmt.Sprintf("gpsd JSON document of type:\"%s\": %v",
+			rule.Class, p.Data)
+		return s
 	}
 	if rule.Type == gpsdfilter.TypeIgnore || rule.Type == gpsdfilter.TypeUnknown {
-		return
+		return ""
 	}
 	if rule.Type == gpsdfilter.TypeLog && rule.DoLog == false {
-		p.Logger.Printf("gpsd JSON document of type:\"%s\": %v", rule.Class, p.Data)
+		s := fmt.Sprintf("gpsd JSON document of type:\"%s\": %v",
+			rule.Class, p.Data)
+		return s
 	}
-	return
+	return "?"
 }
 
 func ruleParse(p *ParseArgs, rule *gpsdfilter.Rule) (interface{}, error) {
@@ -22,41 +31,43 @@ func ruleParse(p *ParseArgs, rule *gpsdfilter.Rule) (interface{}, error) {
 	)
 	switch rule.Class {
 	case "ATT":
-		parseATT(p)
-		return i, err
+		i, err = parseATT(p)
+		return i, errors.Trace(err)
 	case "DEVICE":
-		parseDEVICE(p)
-		return i, err
+		i, err = parseDEVICE(p)
+		return i, errors.Trace(err)
 	case "DEVICES":
-		parseDEVICES(p)
-		return i, err
+		i, err = parseDEVICES(p)
+		return i, errors.Trace(err)
 	case "ERROR":
-		parseERROR(p)
-		return i, err
+		i, err = parseERROR(p)
+		return i, errors.Trace(err)
 	case "GST":
-		parseGST(p)
-		return i, err
+		i, err = parseGST(p)
+		return i, errors.Trace(err)
 	case "POLL":
-		parsePOLL(p)
-		return i, err
+		i, err = parsePOLL(p)
+		return i, errors.Trace(err)
 	case "PPS":
-		parsePPS(p)
-		return i, err
+		i, err = parsePPS(p)
+		return i, errors.Trace(err)
 	case "SKY":
-		parseATT(p)
-		return i, err
+		i, err = parseATT(p)
+		return i, errors.Trace(err)
 	case "TOFF":
 		parseTOFF(p)
-		return i, err
+		return i, errors.Trace(err)
 	case "TPV":
-		parseTPV(p)
-		return i, err
+		i, err = parseTPV(p)
+		return i, errors.Trace(err)
 	case "VERSION":
-		parseVERSION(p)
-		return i, err
+		i, err = parseVERSION(p)
+		return i, errors.Trace(err)
 	case "WATCH":
-		parseWATCH(p)
-		return i, err
+		i, err = parseWATCH(p)
+		return i, errors.Trace(err)
 	}
-	return nil, ErrUnknownClass
+	return nil, errors.Annotatef(ErrUnknownClass,
+		"%s: \"class\"=\"<something>\"",
+		`In the gpsd JSON document this JSON value exists: `)
 }

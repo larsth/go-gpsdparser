@@ -2,11 +2,8 @@
 //"github.com/larsth/go-gpsdjson".
 package gpsdparser
 
-import (
-	"log"
-
-	"github.com/larsth/go-gpsdfilter"
-)
+import "github.com/larsth/go-gpsdfilter"
+import "github.com/juju/errors"
 
 //ParseArgs is arguments for function Parse.
 //
@@ -19,21 +16,17 @@ import (
 type ParseArgs struct {
 	Data   []byte
 	Filter *gpsdfilter.Filter
-	Logger *log.Logger
 }
 
 func checkParseArgs(p *ParseArgs) error {
 	if p == nil {
-		return ErrNilParseArgs
+		return errors.Trace(ErrNilParseArgs)
 	}
 	if p.Data == nil {
-		return ErrNilByteSlice
+		return errors.Trace(ErrNilByteSlice)
 	}
 	if p.Filter == nil {
-		return ErrNilFilter
-	}
-	if p.Logger == nil {
-		return ErrNilLogger
+		return errors.Trace(ErrNilFilter)
 	}
 	return nil
 }
@@ -41,24 +34,27 @@ func checkParseArgs(p *ParseArgs) error {
 //Parse parses a gpsd JSON document with the arguments from the ParseArgs
 func Parse(p *ParseArgs) (interface{}, error) {
 	var (
-		rule *gpsdfilter.Rule
-		err  error
-		i    interface{}
+		rule              *gpsdfilter.Rule
+		err, annotatedErr error
+		i                 interface{}
 	)
 
 	if err = checkParseArgs(p); err != nil {
-		return nil, err
+		annotatedErr = errors.Annotate(err, "checkParseArgs error")
+		return nil, annotatedErr
 	}
 
 	if rule, err = p.Filter.Filter(p.Data); err != nil {
-		return nil, err
+		annotatedErr = errors.Annotate(err, "filter error")
+		return nil, annotatedErr
 	}
 
 	ruleLogIgnoreUnknown(p, rule)
 	if rule.Type == gpsdfilter.TypeParse {
 		if i, err = ruleParse(p, rule); err != nil {
-			return nil, err
+			annotatedErr = errors.Annotate(err, "ruleParse error")
+			return nil, annotatedErr
 		}
 	}
-	return i, err
+	return i, nil
 }
