@@ -2,8 +2,10 @@
 //"github.com/larsth/go-gpsdjson".
 package gpsdparser
 
-import "github.com/larsth/go-gpsdfilter"
-import "github.com/juju/errors"
+import (
+	"github.com/juju/errors"
+	"github.com/larsth/go-gpsdfilter"
+)
 
 //ParseArgs is arguments for function Parse.
 //
@@ -16,19 +18,6 @@ import "github.com/juju/errors"
 type ParseArgs struct {
 	Data   []byte
 	Filter *gpsdfilter.Filter
-}
-
-func checkParseArgs(p *ParseArgs) error {
-	if p == nil {
-		return errors.Trace(ErrNilParseArgs)
-	}
-	if p.Data == nil {
-		return errors.Trace(ErrNilByteSlice)
-	}
-	if p.Filter == nil {
-		return errors.Trace(ErrNilFilter)
-	}
-	return nil
 }
 
 //Parse parses a gpsd JSON document with the arguments from the ParseArgs
