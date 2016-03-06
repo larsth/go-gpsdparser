@@ -14,9 +14,15 @@ func parseGST(p *ParseArgs) (interface{}, error) {
 	)
 
 	if p == nil {
-		annotatedErr := errors.Annotate(ErrNilByteSlice, "GST parse error")
+		annotatedErr := errors.Trace(ErrNilParseArgs)
 		return nil, annotatedErr
 	}
+
+	if len(p.Data) == 0 {
+		annotatedErr := errors.Trace(ErrEmptyOrNilByteSlice)
+		return nil, annotatedErr
+	}
+
 	if err = json.Unmarshal(p.Data, v); err != nil {
 		annotatedErr := errors.Annotate(err,
 			"GST parsing: json.Unmarshal error")

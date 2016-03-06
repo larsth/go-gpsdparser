@@ -38,7 +38,6 @@ func Parse(p *ParseArgs) (interface{}, error) {
 		return nil, annotatedErr
 	}
 
-	ruleLogIgnoreUnknown(p, rule)
 	if rule.Type == gpsdfilter.TypeParse {
 		if i, err = ruleParse(p, rule); err != nil {
 			annotatedErr = errors.Annotate(err, "ruleParse error")

@@ -14,9 +14,15 @@ func parsePOLL(p *ParseArgs) (interface{}, error) {
 	)
 
 	if p == nil {
-		annotatedErr := errors.Annotate(ErrNilByteSlice, "POLL parse error")
+		annotatedErr := errors.Trace(ErrNilParseArgs)
 		return nil, annotatedErr
 	}
+
+	if len(p.Data) == 0 {
+		annotatedErr := errors.Trace(ErrEmptyOrNilByteSlice)
+		return nil, annotatedErr
+	}
+
 	if err = json.Unmarshal(p.Data, v); err != nil {
 		annotatedErr := errors.Annotate(err,
 			"POLL parsing: json.Unmarshal error")

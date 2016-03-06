@@ -7,32 +7,32 @@ import (
 	"github.com/larsth/go-gpsdjson"
 )
 
-func TestParseAttNilParseArgs(t *testing.T) {
+func TestParseDevicesNilParseArgs(t *testing.T) {
 	var wantErr = errors.Trace(ErrNilParseArgs)
-	utilsParseWithNilParseArgs(wantErr, t, parseATT)
+	utilsParseWithNilParseArgs(wantErr, t, parseDEVICES)
 }
 
-func TestParseAttEmptyOrNilByteSlice(t *testing.T) {
+func TestParseDevicesEmptyOrNilByteSlice(t *testing.T) {
 	var wantErr = errors.Trace(ErrEmptyOrNilByteSlice)
-	utilsParseWithEmptyOrNilByteSlice(wantErr, t, parseATT)
+	utilsParseWithEmptyOrNilByteSlice(wantErr, t, parseDEVICES)
 }
 
-func TestParseAttJsonUnmarshalError(t *testing.T) {
-	const annotation = "ATT parsing"
+func TestParseDevicesJsonUnmarshalError(t *testing.T) {
+	const annotation = "DEVICES parsing"
 	var (
-		p       = []byte(`{"class":"ATT"`)
+		p       = []byte(`{"class":"DEVICES"`)
 		wantErr = errors.Annotate(
 			wantParseJsonUnmarshalErr, annotation)
 	)
-	utilsParseWithJsonUnmarshalError(p, wantErr, t, parseATT)
+	utilsParseWithJsonUnmarshalError(p, wantErr, t, parseDEVICES)
 }
 
-func TestParseAtt(t *testing.T) {
+func TestParseDevices(t *testing.T) {
 	var (
 		pA              *ParseArgs = new(ParseArgs)
-		p                          = []byte(`{"class":"ATT"}`)
+		p                          = []byte(`{"class":"DEVICES"}`)
 		gotI            interface{}
-		gotGpsdJsonType *gpsdjson.ATT
+		gotGpsdJsonType *gpsdjson.DEVICES
 		gotErr          error
 		wantErr         error = nil
 		s               string
@@ -41,7 +41,7 @@ func TestParseAtt(t *testing.T) {
 
 	pA.Data = p
 
-	gotI, gotErr = parseATT(pA)
+	gotI, gotErr = parseDEVICES(pA)
 
 	//error test
 	if s, ok = errorTest(gotErr, wantErr); false == ok {
@@ -49,11 +49,11 @@ func TestParseAtt(t *testing.T) {
 	}
 
 	//type conversion test
-	gotGpsdJsonType, ok = (gotI).(*gpsdjson.ATT)
+	gotGpsdJsonType, ok = (gotI).(*gpsdjson.DEVICES)
 	if ok {
 		t.Logf("\nType conversion ok\n\tgot:\n\t\t%#v\n", gotGpsdJsonType)
 	} else {
-		sGpsdjsonType := `*gpsdjson.ATT`
+		sGpsdjsonType := `*gpsdjson.DEVICES`
 		t.Logf(
 			"gotI' of type 'interface{}' is not type convertable to type '%s'",
 			sGpsdjsonType)

@@ -9,14 +9,20 @@ import (
 
 func parseDEVICES(p *ParseArgs) (interface{}, error) {
 	var (
-		v   = new(*gpsdjson.DEVICES)
+		v   = new(gpsdjson.DEVICES)
 		err error
 	)
 
 	if p == nil {
-		annotatedErr := errors.Annotate(ErrNilByteSlice, "DEVICES parse error")
+		annotatedErr := errors.Trace(ErrNilParseArgs)
 		return nil, annotatedErr
 	}
+
+	if len(p.Data) == 0 {
+		annotatedErr := errors.Trace(ErrEmptyOrNilByteSlice)
+		return nil, annotatedErr
+	}
+
 	if err = json.Unmarshal(p.Data, v); err != nil {
 		annotatedErr := errors.Annotate(err,
 			"DEVICES parsing: json.Unmarshal error")

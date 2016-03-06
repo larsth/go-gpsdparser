@@ -14,9 +14,15 @@ func parseTOFF(p *ParseArgs) (interface{}, error) {
 	)
 
 	if p == nil {
-		annotatedErr := errors.Annotate(ErrNilByteSlice, "TOFF parse error")
+		annotatedErr := errors.Trace(ErrNilParseArgs)
 		return nil, annotatedErr
 	}
+
+	if len(p.Data) == 0 {
+		annotatedErr := errors.Trace(ErrEmptyOrNilByteSlice)
+		return nil, annotatedErr
+	}
+
 	if err = json.Unmarshal(p.Data, v); err != nil {
 		annotatedErr := errors.Annotate(err,
 			"TOFF parsing: json.Unmarshal error")

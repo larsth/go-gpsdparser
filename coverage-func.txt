@@ -1,0 +1,15 @@
+github.com/larsth/go-gpsdparser/check-parse-args.go:7:	checkParseArgs	100.0%
+github.com/larsth/go-gpsdparser/parse-att.go:10:	parseATT	100.0%
+github.com/larsth/go-gpsdparser/parse-device.go:10:	parseDEVICE	100.0%
+github.com/larsth/go-gpsdparser/parse-devices.go:10:	parseDEVICES	100.0%
+github.com/larsth/go-gpsdparser/parse-error.go:10:	parseERROR	100.0%
+github.com/larsth/go-gpsdparser/parse-gst.go:10:	parseGST	100.0%
+github.com/larsth/go-gpsdparser/parse-poll.go:10:	parsePOLL	100.0%
+github.com/larsth/go-gpsdparser/parse-pps.go:10:	parsePPS	100.0%
+github.com/larsth/go-gpsdparser/parse-toff.go:10:	parseTOFF	100.0%
+github.com/larsth/go-gpsdparser/parse-tpv.go:10:	parseTPV	100.0%
+github.com/larsth/go-gpsdparser/parse-version.go:10:	parseVERSION	100.0%
+github.com/larsth/go-gpsdparser/parse-watch.go:10:	parseWATCH	100.0%
+github.com/larsth/go-gpsdparser/parse.go:24:		Parse		100.0%
+github.com/larsth/go-gpsdparser/rule-parse.go:8:	ruleParse	100.0%
+total:							(statements)	100.0%

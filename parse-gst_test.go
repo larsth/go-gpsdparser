@@ -7,32 +7,32 @@ import (
 	"github.com/larsth/go-gpsdjson"
 )
 
-func TestParseAttNilParseArgs(t *testing.T) {
+func TestParseGstNilParseArgs(t *testing.T) {
 	var wantErr = errors.Trace(ErrNilParseArgs)
-	utilsParseWithNilParseArgs(wantErr, t, parseATT)
+	utilsParseWithNilParseArgs(wantErr, t, parseGST)
 }
 
-func TestParseAttEmptyOrNilByteSlice(t *testing.T) {
+func TestParseGstEmptyOrNilByteSlice(t *testing.T) {
 	var wantErr = errors.Trace(ErrEmptyOrNilByteSlice)
-	utilsParseWithEmptyOrNilByteSlice(wantErr, t, parseATT)
+	utilsParseWithEmptyOrNilByteSlice(wantErr, t, parseGST)
 }
 
-func TestParseAttJsonUnmarshalError(t *testing.T) {
-	const annotation = "ATT parsing"
+func TestParseGstJsonUnmarshalError(t *testing.T) {
+	const annotation = "GST parsing"
 	var (
-		p       = []byte(`{"class":"ATT"`)
+		p       = []byte(`{"class":"GST"`)
 		wantErr = errors.Annotate(
 			wantParseJsonUnmarshalErr, annotation)
 	)
-	utilsParseWithJsonUnmarshalError(p, wantErr, t, parseATT)
+	utilsParseWithJsonUnmarshalError(p, wantErr, t, parseGST)
 }
 
-func TestParseAtt(t *testing.T) {
+func TestParseGst(t *testing.T) {
 	var (
 		pA              *ParseArgs = new(ParseArgs)
-		p                          = []byte(`{"class":"ATT"}`)
+		p                          = []byte(`{"class":"GST"}`)
 		gotI            interface{}
-		gotGpsdJsonType *gpsdjson.ATT
+		gotGpsdJsonType *gpsdjson.GST
 		gotErr          error
 		wantErr         error = nil
 		s               string
@@ -41,7 +41,7 @@ func TestParseAtt(t *testing.T) {
 
 	pA.Data = p
 
-	gotI, gotErr = parseATT(pA)
+	gotI, gotErr = parseGST(pA)
 
 	//error test
 	if s, ok = errorTest(gotErr, wantErr); false == ok {
@@ -49,11 +49,11 @@ func TestParseAtt(t *testing.T) {
 	}
 
 	//type conversion test
-	gotGpsdJsonType, ok = (gotI).(*gpsdjson.ATT)
+	gotGpsdJsonType, ok = (gotI).(*gpsdjson.GST)
 	if ok {
 		t.Logf("\nType conversion ok\n\tgot:\n\t\t%#v\n", gotGpsdJsonType)
 	} else {
-		sGpsdjsonType := `*gpsdjson.ATT`
+		sGpsdjsonType := `*gpsdjson.GST`
 		t.Logf(
 			"gotI' of type 'interface{}' is not type convertable to type '%s'",
 			sGpsdjsonType)
